@@ -22,7 +22,7 @@
         description = "simple rust with toolchain";
       };
       cpp = {
-        path = "./cpp";
+        path = ./cpp;
         description = "蓝桥";
       };
     };
