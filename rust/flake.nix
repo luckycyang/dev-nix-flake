@@ -44,6 +44,21 @@
               alias find=fd
             '';
           };
+          devShells.embed = mkShell {
+            name = "embed";
+            buildInputs = [
+              openssl
+              pkg-config
+              eza
+              fd
+              rust-analyzer
+              rust-bin.selectLatestNightlyWith
+              (toolchain: (toolchain.default.override {
+                extensions = ["rust-src" "rustfmt" "clippy"]; # rust-src for rust-analyzer
+                targets = ["thumbv7m-none-eabi"];
+              }))
+            ];
+          };
         }
     );
 }
