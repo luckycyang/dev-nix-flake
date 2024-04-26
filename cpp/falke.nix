@@ -52,6 +52,16 @@
               alias ls=eza
             '';
           };
+          embed = pkgs.mkShell {
+            name = "embed";
+            buildInputs = with pkgs; [
+              openocd
+              gnumake
+              ninja
+              cmake
+              gcc-arm-embedded
+            ];
+          };
           default = cshabi;
         };
         # flake contents here
