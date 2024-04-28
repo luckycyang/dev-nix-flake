@@ -14,6 +14,15 @@
         pkgs = import nixpkgs {inherit system;};
       in {
         # flake contents here
+        devShells = {
+          default = pkgs.mkShell {
+            buildInputs = with pkgs; [
+              elixir_1_16
+              nodejs_21
+              postgresql_16
+            ];
+          };
+        };
       }
     );
 }
