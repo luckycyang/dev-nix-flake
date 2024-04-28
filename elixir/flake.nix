@@ -18,7 +18,7 @@
           default = pkgs.mkShell {
             buildInputs = with pkgs; [
               elixir_1_16
-              nodejs_21
+              nodejs
               postgresql_16
             ];
           };
