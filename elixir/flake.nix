@@ -20,6 +20,7 @@
               elixir_1_16
               nodejs
               postgresql_16
+              inotify-tools
             ];
           };
         };
