@@ -26,7 +26,7 @@
         description = "蓝桥";
       };
       elixir = {
-        path = "./elixir";
+        path = ./elixir;
         description = "elixir";
       };
     };
