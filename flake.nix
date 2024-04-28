@@ -25,6 +25,10 @@
         path = ./cpp;
         description = "蓝桥";
       };
+      elixir = {
+        path = "./elixir";
+        description = "elixir";
+      };
     };
   };
 }
