@@ -27,36 +27,52 @@
           });
       in
         with pkgs; {
-          devShells.default = mkShell {
+          devShells = {
+            default = mkShell {
+              buildInputs = [
+                openssl
+                pkg-config
+                eza
+                fd
+                rust-analyzer
+                rustpkg
+                # youcan also rust-bin.{stable, beta, nightly}.{lastest, "2121-01-01"...}.default
+                # where override {extensions = []; targets = [];}
+              ];
+
+              shellHook = ''
+                alias ls=eza
+                alias find=fd
+              '';
+            };
+            embed = mkShell {
+              name = "embed";
+              buildInputs = [
+                openssl
+                pkg-config
+                eza
+                fd
+                rust-analyzer
+                (rust-bin.selectLatestNightlyWith (toolchain:
+                  toolchain.default.override {
+                    extensions = ["rust-src" "rustfmt" "clippy"]; # rust-src for rust-analyzer
+                    targets = ["x86_64-unknown-linux-gnu" "thumbv7m-none-eabi"];
+                  }))
+              ];
+            };
+          };
+          slint = mkShell {
+            name = "slint-dev";
+            LD_LIBRARY_PATH = "$LD_LIBRARY_PATH:${with pkgs;
+              lib.makeLibraryPath [
+                wayland
+                libxkbcommon
+                fontconfig
+              ]}";
             buildInputs = [
-              openssl
               pkg-config
-              eza
-              fd
               rust-analyzer
               rustpkg
-              # youcan also rust-bin.{stable, beta, nightly}.{lastest, "2121-01-01"...}.default
-              # where override {extensions = []; targets = [];}
-            ];
-
-            shellHook = ''
-              alias ls=eza
-              alias find=fd
-            '';
-          };
-          devShells.embed = mkShell {
-            name = "embed";
-            buildInputs = [
-              openssl
-              pkg-config
-              eza
-              fd
-              rust-analyzer
-              (rust-bin.selectLatestNightlyWith (toolchain:
-                toolchain.default.override {
-                  extensions = ["rust-src" "rustfmt" "clippy"]; # rust-src for rust-analyzer
-                  targets = ["x86_64-unknown-linux-gnu" "thumbv7m-none-eabi"];
-                }))
             ];
           };
         }
