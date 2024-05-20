@@ -29,6 +29,10 @@
         path = ./elixir;
         description = "elixir";
       };
+      java = {
+        path = ./java;
+        description = "java";
+      };
     };
   };
 }
