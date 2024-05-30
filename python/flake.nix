@@ -40,6 +40,14 @@
                 cudaPackages.cudatoolkit
               ];
             };
+            venv = pkgs.mkShell {
+              name = "python-venv";
+              buildInputs = with pkgs; [
+                python311
+                python311Packages.virtualenv
+                python311Packages.pip
+              ];
+            };
           };
         }
     );

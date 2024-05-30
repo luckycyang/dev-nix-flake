@@ -60,20 +60,20 @@
                   }))
               ];
             };
-          };
-          slint = mkShell {
-            name = "slint-dev";
-            LD_LIBRARY_PATH = "$LD_LIBRARY_PATH:${with pkgs;
-              lib.makeLibraryPath [
-                wayland
-                libxkbcommon
-                fontconfig
-              ]}";
-            buildInputs = [
-              pkg-config
-              rust-analyzer
-              rustpkg
-            ];
+            slint = mkShell {
+              name = "slint-dev";
+              LD_LIBRARY_PATH = "$LD_LIBRARY_PATH:${with pkgs;
+                lib.makeLibraryPath [
+                  wayland
+                  libxkbcommon
+                  fontconfig
+                ]}";
+              buildInputs = [
+                pkg-config
+                rust-analyzer
+                rustpkg
+              ];
+            };
           };
         }
     );
