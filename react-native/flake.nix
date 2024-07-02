@@ -1,43 +1,44 @@
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    devshell.url = "github:numtide/devshell";
-    flake-utils.url = "github:numtide/flake-utils";
-    android.url = "github:tadfisher/android-nixpkgs";
+    nixpkgs.url = "github:cachix/devenv-nixpkgs/rolling";
+    systems.url = "github:nix-systems/default";
+    devenv.url = "github:cachix/devenv";
+    devenv.inputs.nixpkgs.follows = "nixpkgs";
   };
-  outputs = {
-    self,
-    nixpkgs,
-    devshell,
-    flake-utils,
-  }:
-    flake-utils.lib.eachDefaultSystem
-    (
-      system: let
-        pkgs = import nixpkgs {
-          inherit system;
-          config.allowUnfree = true;
-          overlays = [
-            devshell.overlay
-          ];
-        };
-      in {
-        # flake contents here
-        devShells = {
-          default = pkgs.mkShell {
-            # env
-            ANDROID_HOME = "${pkgs.android-sdk}/share/android-sdk";
-            ANDROID_SDK_ROOT = "${pkgs.android-sdk}/share/android-sdk";
-            PATH = "${pkgs.android-sdk}/share/android-sdk/emulator:${pkgs.android-sdk}/share/android-sdk/platform-tools";
-            buildInputs = with pkgs; [
-              android-sdk
-              gradle
-              jdk17
-              pkg-config
-              nodejs
-            ];
-          };
-        };
-      }
-    );
+
+  nixConfig = {
+    extra-trusted-public-keys = "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw=";
+    extra-substituters = "https://devenv.cachix.org";
+  };
+
+  outputs = { self, nixpkgs, devenv, systems, ... } @ inputs:
+    let
+      forEachSystem = nixpkgs.lib.genAttrs (import systems);
+    in
+    {
+      packages = forEachSystem (system: {
+        devenv-up = self.devShells.${system}.default.config.procfileScript;
+      });
+
+      devShells = forEachSystem
+        (system:
+          let
+            pkgs = nixpkgs.legacyPackages.${system};
+          in
+          {
+            default = devenv.lib.mkShell {
+              inherit inputs pkgs;
+              modules = [
+                {
+                  android = {enable = true;reactNative.enable = true;android-studio.enable = false;};
+                  languages.typescript.enable = true;
+                  languages.java.jdk.package = pkgs.jdk17;
+                  languages.c.enable = true;
+                  languages.cplusplus.enable = true;
+                  packages = [pkgs.ninja];
+                }
+              ];
+            };
+          });
+    };
 }
