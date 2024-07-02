@@ -33,6 +33,10 @@
         path = ./java;
         description = "java";
       };
+      scala = {
+        path = ./scala;
+        description = "scala env with devenv";        
+      };
     };
   };
 }
