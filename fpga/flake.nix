@@ -18,7 +18,7 @@
           default = pkgs.mkShell {
             buildInputs = with pkgs; [
               openfpgaloader
-              apycula
+              python312Packages.apycula
               yosys
               nextpnrWithGui
             ];
