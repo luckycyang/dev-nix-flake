@@ -35,7 +35,11 @@
       };
       scala = {
         path = ./scala;
-        description = "scala env with devenv";        
+        description = "scala env with devenv";
+      };
+      openfpga = {
+        path = ./fpga;
+        description = "open fpga toolchain with yosys and nextptr";
       };
     };
   };
