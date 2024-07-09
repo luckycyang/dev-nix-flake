@@ -1,6 +1,6 @@
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
     flake-utils.url = "github:numtide/flake-utils";
     nur-packages.url = "github:luckycyang/nur-packages";
   };
@@ -21,13 +21,13 @@
         overlay = final: prev: {
           yosys-synlig = prev.yosys-synlig.overrideAttrs (
             final: prev: {
-                installPhase = ''
-                  runHook preInstall
-                  mkdir -p $out/share/yosys/plugins
-                  cp ./build/release/systemverilog-plugin/systemverilog.so \
-                    $out/share/yosys/plugins/synlig.so
-                  runHook postInstall
-                '';
+              installPhase = ''
+                runHook preInstall
+                mkdir -p $out/share/yosys/plugins
+                cp ./build/release/systemverilog-plugin/systemverilog.so \
+                  $out/share/yosys/plugins/synlig.so
+                runHook postInstall
+              '';
             }
           );
         };
@@ -35,13 +35,15 @@
         # flake contents here
         devShells = {
           default = pkgs.mkShell {
-            buildInputs = with pkgs; [
-              openfpgaloader
-              python312Packages.apycula
-              
-              # yosys-synlig
-              nextpnrWithGui
-            ] ++ ([(pkgs.yosys.withPlugins [nur-packages.packages."${pkgs.system}".yosys-synlig])]);
+            buildInputs = with pkgs;
+              [
+                openfpgaloader
+                python312Packages.apycula
+
+                # yosys-synlig
+                nextpnrWithGui
+              ]
+              ++ [(pkgs.yosys.withPlugins [pkgs.yosys-synlig])];
           };
         };
       }
