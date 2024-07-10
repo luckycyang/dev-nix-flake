@@ -2,13 +2,11 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
     flake-utils.url = "github:numtide/flake-utils";
-    nur-packages.url = "github:luckycyang/nur-packages";
   };
   outputs = {
     self,
     nixpkgs,
     flake-utils,
-    nur-packages,
   }:
     flake-utils.lib.eachDefaultSystem
     (
