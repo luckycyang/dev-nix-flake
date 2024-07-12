@@ -41,6 +41,14 @@
         path = ./fpga;
         description = "open fpga toolchain with yosys and nextptr";
       };
+      haskell = {
+        path = ./haskell;
+        description = "haskell env in devenv";
+      };
+      devenv = {
+        path = ./devenv;
+        description = "devenv template for devenv doc";
+      };
     };
   };
 }
