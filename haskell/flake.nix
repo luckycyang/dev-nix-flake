@@ -21,6 +21,17 @@
               ghc
             ];
           };
+          clash = pkgs.mkShell {
+            buildInputs = with pkgs; [
+              pkg-config
+              cabal-install
+              (haskellPackages.ghcWithPackages (p:
+                with p; [
+                  haskellPackages.clash-ghc
+                  ## ghc-typelits-knownnat
+                ]))
+            ];
+          };
         };
       }
     );
