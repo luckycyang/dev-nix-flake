@@ -4,42 +4,24 @@
     devenv.url = "github:cachix/devenv";
   };
 
-  outputs = {
-    self,
-    nixpkgs,
-    devenv,
-    ...
-  } @ inputs: let
-    system = "x86_64-linux";
-    pkgs = nixpkgs.legacyPackages.${system};
-  in {
-    packages.${system} = {
-      projectA-devenv-up = self.devShells.${system}.projectA.config.procfileScript;
-      projectB-devenv-up = self.devShells.${system}.projectB.config.procfileScript;
-    };
 
-    devShells.${system} = {
-      projectA = devenv.lib.mkShell {
-        inherit inputs pkgs;
-        modules = [
-          {
-            enterShell = ''
-              echo this is project A
-            '';
-          }
-        ];
+  outputs = { self, nixpkgs, devenv, ... } @ inputs:
+    let
+      system = "x86_64-linux";
+      pkgs = import nixpkgs {
+        inherit system;
       };
-
-      projectB = devenv.lib.mkShell {
+    in
+    {
+      packages.${system}.devenv-up = self.devShells.${system}.default.config.procfileScript;
+      devShells.${system}.default = devenv.lib.mkShell {
         inherit inputs pkgs;
         modules = [
-          {
-            enterShell = ''
-              echo this is project B
-            '';
-          }
+          ({ pkgs, config, ... }: {
+            # This is your devenv configuration
+
+          })
         ];
       };
     };
-  };
 }
