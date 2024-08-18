@@ -1,0 +1,54 @@
+{
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
+    devenv.url = "github:cachix/devenv";
+    rust-overlay.url = "github:oxalica/rust-overlay";
+  };
+
+
+  outputs = { self, nixpkgs, devenv, rust-overlay, nur, ... } @ inputs:
+    let
+      overlays = [(import rust-overlay)];
+      system = "x86_64-linux";
+      pkgs = import nixpkgs {
+        inherit system overlays;
+      };
+      rustpkg = pkgs.rust-bin.selectLatestNightlyWith (toolchain:
+        toolchain.default.override {
+          extensions = ["rust-src" "rustfmt" "clippy"]; # rust-src for rust-analyzer
+          targets = ["x86_64-unknown-linux-gnu" "wasm32-unknown-unknown"];
+      });
+    in
+    {
+      packages.${system}.devenv-up = self.devShells.${system}.default.config.procfileScript;
+      devShells.${system}.default = devenv.lib.mkShell {
+        inherit inputs pkgs;
+        modules = [
+          ({ pkgs, config, ... }: {
+            # This is your devenv configuration
+            packages = with pkgs;
+              [
+                pkg-config
+                openssl
+                glib
+                cairo
+                pango
+                atk
+                gdk-pixbuf
+                libsoup
+                gtk3
+                libappindicator
+                webkitgtk_4_1
+                libz
+                rustpkg
+                wasm-bindgen-cli
+                # 请自行 cargo install 安装 dioxus-cli 显然这样不符合 no-fhs
+              ];
+            enterShell = ''
+              alias dx="~/.cargo/bin/dx"
+              '';
+          })
+        ];
+      };
+    };
+}
