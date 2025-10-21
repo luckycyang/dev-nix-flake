@@ -13,9 +13,8 @@
       system: let
         pkgs = import nixpkgs {inherit system;};
       in {
-        # flake contents here
-        devShells = rec {
-          default = pkgs.mkShell.override {stdenv = pkgs.clangStdenv;} {
+        devShells = {
+          cshabi = pkgs.mkShell.override {stdenv = pkgs.clangStdenv;} {
             name = "simple";
             buildInputs = with pkgs;
               [
@@ -27,6 +26,7 @@
               alias ls=eza
             '';
           };
+        };
       }
     );
 }
