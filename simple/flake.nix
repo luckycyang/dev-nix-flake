@@ -14,6 +14,19 @@
         pkgs = import nixpkgs {inherit system;};
       in {
         # flake contents here
+        devShells = rec {
+          default = pkgs.mkShell.override {stdenv = pkgs.clangStdenv;} {
+            name = "simple";
+            buildInputs = with pkgs;
+              [
+                fd
+                eza
+              ];
+            shellHook = ''
+              alias find=fd
+              alias ls=eza
+            '';
+          };
       }
     );
 }
