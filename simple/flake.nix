@@ -14,7 +14,7 @@
         pkgs = import nixpkgs {inherit system;};
       in {
         devShells = {
-          cshabi = pkgs.mkShell.override {stdenv = pkgs.clangStdenv;} {
+          default = pkgs.mkShell.override {stdenv = pkgs.clangStdenv;} {
             name = "simple";
             buildInputs = with pkgs;
               [
